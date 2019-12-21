@@ -9,9 +9,9 @@ import torch
 
 sys.path.insert(0,'.')
 from data_prov import RegionDataset
-from modules.model import TWNMDNet, set_optimizer, BCELoss, Precision
+from modules.model import MDNet, set_optimizer, BCELoss, Precision
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
 
 def train_mdnet(opts):
 
@@ -25,7 +25,7 @@ def train_mdnet(opts):
         dataset[k] = RegionDataset(seq['images'], seq['gt'], opts)
 
     # Init model
-    model = TWNMDNet(opts['init_model_path'], K)
+    model = MDNet_RandomPrune(opts['init_model_path'], K, 0.8)
     if opts['use_gpu']:
         model = model.cuda()
     model.set_learnable_params(opts['ft_layers'])
@@ -64,17 +64,10 @@ def train_mdnet(opts):
             if j % batch_accum == 0:
                 model.zero_grad()
             loss.backward()
-            
-            for p in list(model.parameters()):
-                if hasattr(p,'org'):
-                    p.data.copy_(p.org)
             if j % batch_accum == batch_accum - 1 or j == len(k_list) - 1:
                 if 'grad_clip' in opts:
                     torch.nn.utils.clip_grad_norm_(model.parameters(), opts['grad_clip'])
                 optimizer.step()
-            for p in list(model.parameters()):
-                if hasattr(p,'org'):
-                    p.org.copy_(p.data.clamp_(-1,1))
 
             prec[k] = evaluator(pos_score, neg_score)
 

@@ -41,3 +41,21 @@ Speed up vital tracker using pruning or quantification method
      python pretrain/train_mdnet.py -d imagenet
     ```
 
+### Pretrain by BNN
+
+```bash
+ python pretrain/BNN_train_mdnet.py -d vot
+```
+
+### Pretrain by TWN
+
+```bash
+ python pretrain/TWN_train_mdnet.py -d vot
+```
+
+### Pretrain by Random Pruning
+
+```bash
+ python pretrain/RandomPrune_train_mdnet.py -d vot
+```
+
