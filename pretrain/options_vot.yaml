@@ -2,10 +2,17 @@ use_gpu: true
 
 # data path
 data_path: "pretrain/data/vot-otb.pkl"
+data_finetune_path: "datasets/cifar10"
 
 # model path
 init_model_path: "models/imagenet-vgg-m.mat"
+vgg_model_path: "models/vgg16_cifar10.pt"
 model_path: "models/mdnet_vot-otb.pth"
+pruned_model_path: "models/pruned_vgg.pt"
+
+
+#Prune rate
+prune_rate: 0.5
 
 # input size
 img_size: 107
